@@ -11,8 +11,6 @@ A REST API for managing tasks grouped by categories. It is built with ASP.NET Co
 - [Dependency injection](#dependency-injection)
 - [REST API](#rest-api)
 - [Frontend](#frontend)
-- [What was addressed](#what-was-addressed)
-- [Known limitations](#known-limitations)
 
 ## Tech stack
 
