@@ -262,39 +262,4 @@ The ASP.NET Core app serves the static frontend itself (`UseDefaultFiles()` + `U
 | `common.js` | Shared `fetch` wrapper that reads ProblemDetails errors and shows them to the user |
 | `styles.css` | Styles with light and dark mode |
 
-## What was addressed
 
-The following changes made the project follow REST conventions and the layered architecture consistently.
-
-**Entity Framework Core**
-- Applied the initial migration and documented how to inspect the database from the terminal.
-- Added `AsNoTracking()` to read queries, `Include()` for the task's category, and SQL-side ordering.
-- Added `ExistsAsync` with `AnyAsync` to validate foreign keys before writing. Without it, an invalid `categoryId` caused a `500` database error.
-- Changed `Task.Category` from `required` to nullable. The foreign key alone defines the relationship, so clients only send `categoryId`. The database schema did not change and no new migration was needed.
-
-**Dependency injection**
-- Registered `TaskRepository` and `TaskService` as scoped services, following the existing pattern.
-- `TaskService` receives `CategoryRepository` to validate categories. This shows a service that depends on more than one repository.
-
-**API**
-- Completed CRUD for both resources: added update (`PUT`) and delete (`DELETE`) for categories, and the full task resource.
-- Renamed routes to plural resource nouns: `/api/category` became `/api/categories`, and `/api/task` became `/api/tasks`.
-- Added `GET /{id}` for both resources.
-- `POST` now returns `201 Created` with a `Location` header (`CreatedAtAction`) instead of `200`.
-- `DELETE` returns `204 No Content`, and a missing resource returns `404 Not Found`.
-- Introduced request and response DTOs and stopped exposing entities. This removed the misleading `"tasks": []` and `"category": null` fields from responses.
-- Added validation attributes. Empty names used to be accepted and now return `400`.
-- Unified all errors as ProblemDetails, including business validation and unhandled exceptions.
-- Controllers inherit from `ControllerBase` to use `Ok`, `NotFound`, `NoContent`, `CreatedAtAction` and `ValidationProblem`.
-- Changed list return types from `List<T>` to `IEnumerable<T>`, because callers only enumerate them.
-- Added `{id:int}` route constraints and OpenAPI response metadata.
-
-**Frontend**
-- Added a web interface for categories and tasks, served by the API itself.
-
-## Known limitations
-
-- **`Task` entity name.** It clashes with `System.Threading.Tasks.Task`. It compiles because of how C# resolves names, but renaming it (for example to `TaskItem`) would avoid confusion. Renaming the class would also rename the table, so it needs a new migration.
-- **Global namespace.** The entities in `Models/` are declared without a namespace (analyzer hint CA1050).
-- **Secrets in `appsettings.json`.** The database password is stored there. In a real environment, use User Secrets or environment variables.
-- **Docker image.** The `tasks-api` container must be rebuilt (`docker build`) to include these changes.
