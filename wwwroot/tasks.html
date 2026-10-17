@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tasks</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <nav class="nav">
+            <a href="tasks.html" class="nav-link active" aria-current="page">Tasks</a>
+            <a href="index.html" class="nav-link">Categories</a>
+        </nav>
+
+        <header class="header">
+            <h1>Tasks</h1>
+            <p class="subtitle">Keep track of what needs to be done</p>
+        </header>
+
+        <p id="no-categories" class="card hint" hidden>
+            You need at least one category before adding tasks. <a href="index.html">Create a category</a>
+        </p>
+
+        <form id="create-form" class="card task-form">
+            <input id="create-name" type="text" placeholder="Task name" maxlength="100" required>
+            <input id="create-description" type="text" placeholder="Description (optional)" maxlength="500">
+            <div class="task-form-row">
+                <select id="create-category" required></select>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </form>
+
+        <p id="message" class="message" role="status" hidden></p>
+
+        <div class="filters">
+            <select id="filter-category" aria-label="Filter by category">
+                <option value="">All categories</option>
+            </select>
+            <div class="segmented" role="group" aria-label="Filter by status">
+                <button type="button" class="segment active" data-status="all">All</button>
+                <button type="button" class="segment" data-status="pending">Pending</button>
+                <button type="button" class="segment" data-status="done">Done</button>
+            </div>
+        </div>
+
+        <section class="card">
+            <ul id="task-list" class="list"></ul>
+            <p id="empty" class="empty" hidden>No tasks here.</p>
+        </section>
+    </main>
+
+    <script src="common.js"></script>
+    <script src="tasks.js"></script>
+</body>
+</html>
